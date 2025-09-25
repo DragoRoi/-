@@ -1,0 +1,75 @@
+C++ 
+Код 1:
+#include <iostream>
+using namespace std;
+struct Node { int val; Node* next; };  // 1
+int main() {
+    Node* head = new Node{1, nullptr};  // 2
+    head->next = new Node{2, nullptr};  // 3
+    for(Node* cur = head; cur; cur = cur->next)  // 4
+        cout << cur->val << " ";  // 5
+}
+Объяснение:
+1. Структура узла - содержит значение и указатель на следующий узел
+2. Создание головы - первый узел со значением 1, next = nullptr
+3. Добавление второго узла - создаем узел со значением 2
+4. Обход списка - цикл от головы до nullptr (cur становится false при cur=nullptr)
+5. Вывод значения - печать данных текущего узла
+
+Код 2
+#include <iostream>
+using namespace std;
+struct Node { int val; Node* next; };
+void add(Node*& head, int v) {  // 1
+    Node* newNode = new Node{v, head};  // 2
+    head = newNode;  // 3
+}
+int main() {
+    Node* list = nullptr;  // 4
+    add(list, 3); add(list, 2); add(list, 1);  // 5   
+    for(Node* cur = list; cur; cur = cur->next)
+        cout << cur->val << " ";  // Вывод: 1 2 3
+}
+Объяснение:
+1. Функция добавления - принимает ссылку на указатель головы
+2. Создание нового узла - next указывает на текущую голову
+3. Обновление головы - новый узел становится новой головой
+4. Инициализация пустого списка - голова = nullptr
+5. Добавление элементов - каждый новый элемент становится новой головой
+
+JavaScript:
+Код 1:
+
+// 1. Создаем узлы как объекты
+let node1 = {data: 10, next: null};
+let node2 = {data: 20, next: null};
+let node3 = {data: 30, next: null};
+// 2. Связываем узлы
+node1.next = node2;  // 3
+node2.next = node3;
+// 4. Обходим список
+let current = node1;
+while(current) {
+    console.log(current.data);  // 5
+    current = current.next;
+}
+Объяснение:
+1. Создание узлов - каждый узел это объект с data и next
+2. Связывание - соединяем узлы в цепочку
+3. Установка связей - node1 → node2 → node3
+4. Начало обхода - current начинает с головы (node1)
+5. Вывод и переход - печатаем данные и переходим к следующему узлу
+
+Код 2:
+function Node(v) { this.data = v; this.next = null; }  // 1
+let head = new Node(100);  // 2
+head.next = new Node(200);
+head.next.next = new Node(300);  // 3
+for(let cur = head; cur; cur = cur.next)  // 4
+    console.log(cur.data);  // 100 200 300
+
+Объяснение:
+1. Конструктор узла - функция для создания узлов
+2. Создание головы - новый узел со значением 100
+3. Цепочка узлов - последовательное создание связанных узлов
+4. Цикл for - аналогичен C++, обход пока cur не станет null
