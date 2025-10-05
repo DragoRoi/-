@@ -1,0 +1,186 @@
+1- С++
+#include <iostream>
+#include <queue>
+#include <vector>
+
+void minHeapExample() {
+    // Создаем минимальную кучу (наименьший элемент всегда наверху)
+    std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+    
+    // Добавляем элементы в кучу
+    minHeap.push(5);  // Куча: [5]
+    minHeap.push(2);  // Куча: [2, 5] - 2 становится корнем
+    minHeap.push(8);  // Куча: [2, 5, 8]
+    minHeap.push(1);  // Куча: [1, 2, 8, 5] - 1 становится корнем
+    
+    std::cout << "Min-Heap (извлекаем по возрастанию): ";
+    while (!minHeap.empty()) {
+        std::cout << minHeap.top() << " ";  // Печатаем минимальный элемент
+        minHeap.pop();                      // Удаляем минимальный элемент
+    }
+    // Вывод: 1 2 5 8 (элементы в отсортированном порядке)
+}
+
+2-С++
+
+#include <iostream>
+#include <queue>
+
+void maxHeapExample() {
+    // Создаем максимальную кучу (наибольший элемент всегда наверху)
+    // По умолчанию priority_queue - максимальная куча
+    std::priority_queue<int> maxHeap;
+    
+    // Добавляем элементы в кучу
+    maxHeap.push(3);  // Куча: [3]
+    maxHeap.push(7);  // Куча: [7, 3] - 7 становится корнем
+    maxHeap.push(1);  // Куча: [7, 3, 1]
+    maxHeap.push(9);  // Куча: [9, 7, 1, 3] - 9 становится корнем
+    
+    std::cout << "Max-Heap (извлекаем по убыванию): ";
+    while (!maxHeap.empty()) {
+        std::cout << maxHeap.top() << " ";  // Печатаем максимальный элемент
+        maxHeap.pop();                      // Удаляем максимальный элемент
+    }
+    // Вывод: 9 7 3 1 (элементы в обратном отсортированном порядке)
+}
+
+
+1-JAVAscript
+
+class MinHeap {
+    constructor() {
+        this.heap = [];  // Массив для хранения элементов кучи
+    }
+
+    // Добавление элемента в кучу
+    push(value) {
+        this.heap.push(value);      // Добавляем элемент в конец массива
+        this.bubbleUp();            // Восстанавливаем свойства кучи
+    }
+
+    // Извлечение минимального элемента
+    pop() {
+        const min = this.heap[0];   // Сохраняем минимальный элемент (корень)
+        const last = this.heap.pop(); // Извлекаем последний элемент
+        
+        // Если в куче остались элементы
+        if (this.heap.length > 0) {
+            this.heap[0] = last;    // Перемещаем последний элемент в корень
+            this.sinkDown();        // Восстанавливаем свойства кучи
+        }
+        return min;                 // Возвращаем минимальный элемент
+    }
+
+    // Всплытие элемента (восстановление кучи снизу вверх)
+    bubbleUp() {
+        let index = this.heap.length - 1;  // Начинаем с последнего элемента
+        const element = this.heap[index];  // Сохраняем значение элемента
+        
+        // Пока не дошли до корня
+        while (index > 0) {
+            const parentIndex = Math.floor((index - 1) / 2);  // Индекс родителя
+            const parent = this.heap[parentIndex];           // Значение родителя
+            
+            // Если родитель меньше или равен текущему элементу - остановка
+            if (parent <= element) break;
+            
+            // Меняем местами родителя и текущий элемент
+            this.heap[index] = parent;
+            this.heap[parentIndex] = element;
+            
+            index = parentIndex;  // Переходим к родителю для следующей проверки
+        }
+    }
+
+    // Погружение элемента (восстановление кучи сверху вниз)
+    sinkDown() {
+        let index = 0;                    // Начинаем с корня
+        const length = this.heap.length;  // Длина кучи
+        const element = this.heap[0];     // Сохраняем значение корня
+        
+        while (true) {
+            let leftChildIndex = 2 * index + 1;   // Индекс левого потомка
+            let rightChildIndex = 2 * index + 2;  // Индекс правого потомка
+            let swap = null;                      // Индекс элемента для обмена
+            
+            // Проверяем левого потомка
+            if (leftChildIndex < length) {
+                if (this.heap[leftChildIndex] < element) {
+                    swap = leftChildIndex;  // Левый потомок меньше корня
+                }
+            }
+            
+            // Проверяем правого потомка
+            if (rightChildIndex < length) {
+                if (
+                    (swap === null && this.heap[rightChildIndex] < element) || 
+                    (swap !== null && this.heap[rightChildIndex] < this.heap[leftChildIndex])
+                ) {
+                    swap = rightChildIndex;  // Правый потомок меньше левого или корня
+                }
+            }
+            
+            // Если не нашли элемент для обмена - выходим
+            if (swap === null) break;
+            
+            // Меняем местами текущий элемент с найденным потомком
+            this.heap[index] = this.heap[swap];
+            this.heap[swap] = element;
+            
+            index = swap;  // Переходим к потомку для следующей проверки
+        }
+    }
+}
+
+// Пример использования минимальной кучи
+const minHeap = new MinHeap();
+minHeap.push(5);  // Куча: [5]
+minHeap.push(2);  // Куча: [2, 5]
+minHeap.push(8);  // Куча: [2, 5, 8]
+minHeap.push(1);  // Куча: [1, 2, 8, 5]
+
+console.log("Min-Heap извлекаем:", minHeap.pop()); // 1
+console.log("Min-Heap извлекаем:", minHeap.pop()); // 2
+
+
+2-
+
+class MaxHeap {
+    constructor() {
+        this.heap = [];  // Массив для хранения элементов
+    }
+
+    // Добавление элемента (простая реализация через сортировку)
+    push(value) {
+        this.heap.push(value);              // Добавляем элемент в конец
+        this.heap.sort((a, b) => b - a);    // Сортируем по убыванию
+        // Теперь наибольший элемент всегда в начале массива
+    }
+
+    // Извлечение максимального элемента
+    pop() {
+        return this.heap.shift();  // Удаляем и возвращаем первый элемент
+    }
+
+    // Просмотр максимального элемента без удаления
+    peek() {
+        return this.heap[0];  // Возвращаем первый элемент (максимальный)
+    }
+
+    // Размер кучи
+    size() {
+        return this.heap.length;
+    }
+}
+
+// Пример использования максимальной кучи
+const maxHeap = new MaxHeap();
+maxHeap.push(3);  // Куча: [3]
+maxHeap.push(7);  // Куча: [7, 3]
+maxHeap.push(1);  // Куча: [7, 3, 1]
+maxHeap.push(9);  // Куча: [9, 7, 3, 1]
+
+console.log("Max-Heap верхний элемент:", maxHeap.peek());    // 9
+console.log("Max-Heap извлекаем:", maxHeap.pop());          // 9
+console.log("Max-Heap следующий:", maxHeap.peek());         // 7
