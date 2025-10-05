@@ -1,0 +1,155 @@
+1-С++
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class SimpleGraph {
+    vector<vector<int>> adj; // Список смежности
+public:
+    SimpleGraph(int n) { adj.resize(n); } // Конструктор
+    
+    // Добавить ребро
+    void addEdge(int u, int v) {
+        adj[u].push_back(v); // u -> v
+        adj[v].push_back(u); // v -> u (неориентированный)
+    }
+    
+    // Вывести граф
+    void print() {
+        for(int i = 0; i < adj.size(); i++) {
+            cout << i << ": ";
+            for(int neighbor : adj[i]) 
+                cout << neighbor << " ";
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    SimpleGraph g(4); // Граф с 4 вершинами
+    
+    g.addEdge(0, 1); // Ребро 0-1
+    g.addEdge(0, 2); // Ребро 0-2  
+    g.addEdge(1, 3); // Ребро 1-3
+    
+    g.print(); // Вывод списка смежности
+    return 0;
+}
+
+
+2-С++
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+void BFS(vector<vector<int>>& graph, int start) {
+    vector<bool> visited(graph.size(), false); // Посещенные вершины
+    queue<int> q; // Очередь для BFS
+    
+    visited[start] = true; // Посетили стартовую вершину
+    q.push(start); // Добавили в очередь
+    
+    cout << "BFS: ";
+    while(!q.empty()) {
+        int current = q.front(); // Берем из очереди
+        q.pop();
+        cout << current << " "; // Выводим
+        
+        for(int neighbor : graph[current]) { // Всех соседей
+            if(!visited[neighbor]) { // Если не посещали
+                visited[neighbor] = true; // Посетили
+                q.push(neighbor); // Добавили в очередь
+            }
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    vector<vector<int>> graph = {
+        {1, 2},     // Вершина 0 соединена с 1 и 2
+        {0, 3},     // Вершина 1 соединена с 0 и 3
+        {0, 3},     // Вершина 2 соединена с 0 и 3
+        {1, 2}      // Вершина 3 соединена с 1 и 2
+    };
+    
+    BFS(graph, 0); // BFS из вершины 0
+    return 0;
+}
+
+
+1-JS
+
+class SimpleGraph {
+    constructor() {
+        this.nodes = {}; // { vertex: [neighbors] }
+    }
+    
+    // Добавить вершину
+    addVertex(vertex) {
+        if (!this.nodes[vertex]) this.nodes[vertex] = [];
+    }
+    
+    // Добавить ребро
+    addEdge(v1, v2) {
+        this.nodes[v1].push(v2); // v1 -> v2
+        this.nodes[v2].push(v1); // v2 -> v1
+    }
+    
+    // Вывести граф
+    print() {
+        for (let vertex in this.nodes) {
+            console.log(`${vertex} -> ${this.nodes[vertex].join(', ')}`);
+        }
+    }
+}
+
+// Использование
+const graph = new SimpleGraph();
+graph.addVertex('A');
+graph.addVertex('B'); 
+graph.addVertex('C');
+graph.addEdge('A', 'B');
+graph.addEdge('A', 'C');
+graph.print();
+// A -> B, C
+// B -> A  
+// C -> A
+
+
+
+2-JS
+
+
+function BFS(graph, start) {
+    const visited = new Set(); // Множество посещенных вершин
+    const queue = [start];     // Очередь для BFS
+    
+    visited.add(start); // Посетили стартовую вершину
+    
+    console.log('BFS:');
+    while (queue.length > 0) {
+        const current = queue.shift(); // Берем из начала очереди
+        console.log(current); // Выводим текущую вершину
+        
+        // Добавляем всех непосещенных соседей
+        for (let neighbor of graph[current]) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor); // Помечаем как посещенный
+                queue.push(neighbor);  // Добавляем в очередь
+            }
+        }
+    }
+}
+
+// Граф в виде списка смежности
+const graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D'],
+    'C': ['A', 'E'],
+    'D': ['B'],
+    'E': ['C']
+};
+
+BFS(graph, 'A'); // BFS начиная с вершины A
