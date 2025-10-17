@@ -1,0 +1,120 @@
+с++
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+// Функция решения задачи коммивояжера полным перебором
+int tsp(vector<vector<int>>& graph, int n) {
+    // Создаем вектор городов: [0, 1, 2, ..., n-1]
+    vector<int> cities;
+    for(int i = 0; i < n; i++) cities.push_back(i);
+    
+    int min_path = INT_MAX; // Начальное значение минимального пути
+    
+    // Перебираем все перестановки маршрутов
+    do {
+        int current_path = 0;
+        // Суммируем расстояния между последовательными городами
+        for(int i = 0; i < n - 1; i++) {
+            current_path += graph[cities[i]][cities[i+1]];
+        }
+        // Добавляем путь обратно в начальный город
+        current_path += graph[cities[n-1]][cities[0]];
+        
+        // Обновляем минимальный путь
+        min_path = min(min_path, current_path);
+    } while(next_permutation(cities.begin() + 1, cities.end())); // Фиксируем первый город
+    
+    return min_path;
+}
+
+int main() {
+    // Матрица расстояний между городами
+    vector<vector<int>> graph = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+    
+    int result = tsp(graph, 4);
+    cout << "Минимальная длина маршрута: " << result << endl;
+    return 0;
+}
+
+
+JS
+import java.util.*;
+
+public class TSP {
+    // Функция решения задачи коммивояжера
+    public static int tsp(int[][] graph, int n) {
+        // Создаем массив городов
+        int[] cities = new int[n];
+        for(int i = 0; i < n; i++) cities[i] = i;
+        
+        int minPath = Integer.MAX_VALUE;
+        
+        // Перебираем все перестановки
+        do {
+            int currentPath = 0;
+            // Считаем длину текущего маршрута
+            for(int i = 0; i < n - 1; i++) {
+                currentPath += graph[cities[i]][cities[i + 1]];
+            }
+            // Добавляем возврат в начальный город
+            currentPath += graph[cities[n - 1]][cities[0]];
+            
+            // Обновляем минимальный путь
+            if(currentPath < minPath) {
+                minPath = currentPath;
+            }
+        } while(nextPermutation(cities, 1, n - 1)); // Фиксируем первый город
+        
+        return minPath;
+    }
+    
+    // Вспомогательная функция для генерации перестановок
+    private static boolean nextPermutation(int[] arr, int start, int end) {
+        // Реализация алгоритма следующей перестановки
+        int i = end - 1;
+        while(i > start && arr[i - 1] >= arr[i]) i--;
+        
+        if(i <= start) return false;
+        
+        int j = end;
+        while(arr[j - 1] <= arr[i - 1]) j--;
+        
+        // Меняем элементы местами
+        int temp = arr[i - 1];
+        arr[i - 1] = arr[j - 1];
+        arr[j - 1] = temp;
+        
+        // Разворачиваем хвост
+        i++;
+        j = end;
+        while(i < j) {
+            temp = arr[i - 1];
+            arr[i - 1] = arr[j - 1];
+            arr[j - 1] = temp;
+            i++;
+            j--;
+        }
+        return true;
+    }
+    
+    public static void main(String[] args) {
+        // Матрица расстояний
+        int[][] graph = {
+            {0, 10, 15, 20},
+            {10, 0, 35, 25},
+            {15, 35, 0, 30},
+            {20, 25, 30, 0}
+        };
+        
+        int result = tsp(graph, 4);
+        System.out.println("Минимальная длина маршрута: " + result);
+    }
+}
