@@ -1,0 +1,434 @@
+1-СОРТИРОВКА ВЫБОРОМ
+// C++
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n-1; i++) {          // Проходим по всем элементам кроме последнего
+        int minIdx = i;                       // Предполагаем, что текущий элемент минимальный
+        for (int j = i+1; j < n; j++) {      // Ищем минимальный элемент в оставшейся части
+            if (arr[j] < arr[minIdx])        // Если нашли элемент меньше текущего минимального
+                minIdx = j;                   // Запоминаем его индекс
+        }
+        swap(arr[i], arr[minIdx]);            // Меняем местами текущий элемент с минимальным
+    }
+}
+
+// JavaScript
+function selectionSort(arr) {
+    for (let i = 0; i < arr.length - 1; i++) {     // Проходим по всем элементам кроме последнего
+        let minIdx = i;                             // Предполагаем, что текущий элемент минимальный
+        for (let j = i + 1; j < arr.length; j++) { // Ищем минимальный элемент в оставшейся части
+            if (arr[j] < arr[minIdx]) minIdx = j;  // Если нашли элемент меньше - запоминаем индекс
+        }
+        [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]; // Меняем местами текущий элемент с минимальным
+    }
+    return arr;
+}
+2-СОРТИРОВКА ОБМЕНОМ
+// C++
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n-1; i++) {              // Количество проходов по массиву
+        for (int j = 0; j < n-i-1; j++) {        // Проходим по неотсортированной части массива
+            if (arr[j] > arr[j+1])               // Если текущий элемент больше следующего
+                swap(arr[j], arr[j+1]);          // Меняем их местами
+        }
+    }
+}
+
+
+// JavaScript
+function bubbleSort(arr) {
+    for (let i = 0; i < arr.length - 1; i++) {         // Количество проходов по массиву
+        for (let j = 0; j < arr.length - i - 1; j++) { // Проходим по неотсортированной части
+            if (arr[j] > arr[j + 1]) {                 // Если текущий элемент больше следующего
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]; // Меняем их местами
+            }
+        }
+    }
+    return arr;
+}
+
+3-СОРТИРОВКА ВСТАВКАМИ
+
+// C++
+void insertionSort(int arr[], int n) {
+    for (int i = 1; i < n; i++) {        // Начинаем со второго элемента
+        int key = arr[i];                 // Запоминаем текущий элемент для вставки
+        int j = i - 1;                    // Начинаем сравнение с предыдущего элемента
+        while (j >= 0 && arr[j] > key) {  // Пока не дошли до начала и элементы больше key
+            arr[j + 1] = arr[j];          // Сдвигаем элемент вправо
+            j--;                          // Переходим к следующему элементу слева
+        }
+        arr[j + 1] = key;                 // Вставляем key в правильную позицию
+    }
+}
+
+
+
+// JavaScript
+function insertionSort(arr) {
+    for (let i = 1; i < arr.length; i++) {      // Начинаем со второго элемента
+        let key = arr[i];                        // Запоминаем текущий элемент для вставки
+        let j = i - 1;                           // Начинаем сравнение с предыдущего элемента
+        while (j >= 0 && arr[j] > key) {         // Пока не дошли до начала и элементы больше key
+            arr[j + 1] = arr[j];                 // Сдвигаем элемент вправо
+            j--;                                 // Переходим к следующему элементу слева
+        }
+        arr[j + 1] = key;                        // Вставляем key в правильную позицию
+    }
+    return arr;
+}
+
+4-СОРТИРОВКА СЛИЯНИЕМ
+// C++
+void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;                    // Размер левого подмассива
+    int n2 = right - mid;                       // Размер правого подмассива
+    
+    int L[n1], R[n2];                           // Создаем временные массивы
+    for (int i = 0; i < n1; i++) L[i] = arr[left + i];  // Копируем данные в левый массив
+    for (int i = 0; i < n2; i++) R[i] = arr[mid + 1 + i]; // Копируем данные в правый массив
+    
+    int i = 0, j = 0, k = left;                // i - индекс для L, j - для R, k - для основного
+    while (i < n1 && j < n2) {                 // Пока есть элементы в обоих массивах
+        if (L[i] <= R[j]) arr[k++] = L[i++];   // Если элемент из L меньше, берем его
+        else arr[k++] = R[j++];                // Иначе берем элемент из R
+    }
+    
+    while (i < n1) arr[k++] = L[i++];          // Копируем оставшиеся элементы из L
+    while (j < n2) arr[k++] = R[j++];          // Копируем оставшиеся элементы из R
+}
+
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {                        // Если в массиве больше одного элемента
+        int mid = left + (right - left) / 2;   // Находим середину
+        mergeSort(arr, left, mid);             // Сортируем левую половину
+        mergeSort(arr, mid + 1, right);        // Сортируем правую половину
+        merge(arr, left, mid, right);          // Сливаем отсортированные половины
+    }
+}
+
+
+
+// JavaScript
+function mergeSort(arr) {
+    if (arr.length <= 1) return arr;           // Базовый случай: массив из 0 или 1 элемента уже отсортирован
+    
+    const mid = Math.floor(arr.length / 2);    // Находим середину массива
+    const left = mergeSort(arr.slice(0, mid)); // Рекурсивно сортируем левую половину
+    const right = mergeSort(arr.slice(mid));   // Рекурсивно сортируем правую половину
+    
+    return merge(left, right);                 // Сливаем отсортированные половины
+}
+
+function merge(left, right) {
+    let result = [];                           // Массив для результата слияния
+    let i = 0, j = 0;                         // i - индекс для left, j - для right
+    
+    while (i < left.length && j < right.length) { // Пока есть элементы в обоих массивах
+        if (left[i] < right[j]) result.push(left[i++]); // Если элемент из left меньше, берем его
+        else result.push(right[j++]);          // Иначе берем элемент из right
+    }
+    
+    return result.concat(left.slice(i)).concat(right.slice(j)); // Добавляем оставшиеся элементы
+}
+
+5-СОРТИРОВКА ШЕЛЛА
+
+// C++
+void shellSort(int arr[], int n) {
+    for (int gap = n/2; gap > 0; gap /= 2) {  // Начинаем с большого шага, уменьшаем вдвое каждый раз
+        for (int i = gap; i < n; i++) {       // Проходим по элементам, начиная с позиции gap
+            int temp = arr[i];                 // Сохраняем текущий элемент
+            int j;                             // Переменная для внутреннего цикла
+            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) { // Сдвигаем элементы
+                arr[j] = arr[j - gap];         // Сдвигаем элемент на gap позиций вправо
+            }
+            arr[j] = temp;                     // Вставляем сохраненный элемент в правильную позицию
+        }
+    }
+}
+
+
+
+// JavaScript
+function shellSort(arr) {
+    let n = arr.length;
+    for (let gap = Math.floor(n/2); gap > 0; gap = Math.floor(gap/2)) { // Уменьшаем шаг
+        for (let i = gap; i < n; i++) {        // Проходим по элементам с шагом gap
+            let temp = arr[i];                  // Сохраняем текущий элемент
+            let j;                              // Переменная для внутреннего цикла
+            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) { // Сдвигаем элементы
+                arr[j] = arr[j - gap];          // Сдвигаем элемент на gap позиций
+            }
+            arr[j] = temp;                      // Вставляем элемент в правильную позицию
+        }
+    }
+    return arr;
+}
+
+6-БЫСТРЯ СОРТИРОВКА
+// C++
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];                     // Выбираем последний элемент как опорный
+    int i = low - 1;                           // Индекс меньшего элемента
+    
+    for (int j = low; j < high; j++) {         // Проходим по всем элементам кроме опорного
+        if (arr[j] < pivot) {                  // Если текущий элемент меньше опорного
+            i++;                               // Увеличиваем индекс меньшего элемента
+            swap(arr[i], arr[j]);              // Меняем местами с текущим элементом
+        }
+    }
+    swap(arr[i + 1], arr[high]);               // Ставим опорный элемент в правильную позицию
+    return i + 1;                              // Возвращаем индекс опорного элемента
+}
+
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {                          // Если в подмассиве больше одного элемента
+        int pi = partition(arr, low, high);    // Разделяем массив и получаем индекс опорного
+        quickSort(arr, low, pi - 1);           // Рекурсивно сортируем левую часть
+        quickSort(arr, pi + 1, high);          // Рекурсивно сортируем правую часть
+    }
+}
+
+
+// JavaScript
+function quickSort(arr) {
+    if (arr.length <= 1) return arr;           // Базовый случай: массив из 0 или 1 элемента
+    
+    const pivot = arr[arr.length - 1];         // Выбираем последний элемент как опорный
+    const left = [];                           // Массив для элементов меньше опорного
+    const right = [];                          // Массив для элементов больше или равных опорному
+    
+    for (let i = 0; i < arr.length - 1; i++) { // Проходим по всем элементам кроме опорного
+        if (arr[i] < pivot) left.push(arr[i]); // Если элемент меньше опорного - в левый массив
+        else right.push(arr[i]);               // Иначе - в правый массив
+    }
+    
+    return [...quickSort(left), pivot, ...quickSort(right)]; // Рекурсивно сортируем и объединяем
+}
+
+
+7-ПИРАМИДАЛЬНАЯ СОРТИРОВКА
+
+// C++
+void heapify(int arr[], int n, int i) {
+    int largest = i;                           // Инициализируем наибольший как корень
+    int left = 2 * i + 1;                      // Левый потомок = 2*i + 1
+    int right = 2 * i + 2;                     // Правый потомок = 2*i + 2
+    
+    if (left < n && arr[left] > arr[largest])  // Если левый потомок больше корня
+        largest = left;
+    if (right < n && arr[right] > arr[largest]) // Если правый потомок больше наибольшего
+        largest = right;
+        
+    if (largest != i) {                        // Если наибольший не корень
+        swap(arr[i], arr[largest]);            // Меняем местами корень с наибольшим
+        heapify(arr, n, largest);              // Рекурсивно преобразуем затронутую подкучу
+    }
+}
+
+void heapSort(int arr[], int n) {
+    for (int i = n/2 - 1; i >= 0; i--)        // Строим кучу (перегруппируем массив)
+        heapify(arr, n, i);
+        
+    for (int i = n-1; i > 0; i--) {           // Один за другим извлекаем элементы из кучи
+        swap(arr[0], arr[i]);                  // Перемещаем текущий корень в конец
+        heapify(arr, i, 0);                    // Вызываем heapify на уменьшенной куче
+    }
+}
+
+
+
+// JavaScript
+function heapSort(arr) {
+    function heapify(n, i) {
+        let largest = i;                       // Инициализируем наибольший как корень
+        let left = 2 * i + 1;                  // Левый потомок
+        let right = 2 * i + 2;                 // Правый потомок
+        
+        if (left < n && arr[left] > arr[largest]) largest = left; // Левый потомок больше
+        if (right < n && arr[right] > arr[largest]) largest = right; // Правый потомок больше
+        
+        if (largest !== i) {                   // Если наибольший не корень
+            [arr[i], arr[largest]] = [arr[largest], arr[i]]; // Меняем местами
+            heapify(n, largest);               // Рекурсивно преобразуем подкучу
+        }
+    }
+    
+    for (let i = Math.floor(arr.length / 2) - 1; i >= 0; i--) // Строим кучу
+        heapify(arr.length, i);
+        
+    for (let i = arr.length - 1; i > 0; i--) { // Извлекаем элементы из кучи
+        [arr[0], arr[i]] = [arr[i], arr[0]];   // Перемещаем корень в конец
+        heapify(i, 0);                         // Вызываем heapify на уменьшенной куче
+    }
+    return arr;
+}
+
+8-ПОСЛЕДОВАТЕЛЬНЫЕ ПОИСКИ
+
+// C++
+int linearSearch(int arr[], int n, int target) {
+    for (int i = 0; i < n; i++) {              // Проходим по всем элементам массива
+        if (arr[i] == target)                  // Если нашли нужный элемент
+            return i;                          // Возвращаем его индекс
+    }
+    return -1;                                 // Если не нашли, возвращаем -1
+}
+
+
+
+// JavaScript
+function linearSearch(arr, target) {
+    for (let i = 0; i < arr.length; i++) {     // Проходим по всем элементам массива
+        if (arr[i] === target) return i;       // Если нашли элемент - возвращаем индекс
+    }
+    return -1;                                 // Если не нашли - возвращаем -1
+}
+
+
+
+9-БИНАРНЫЙ ПОИСК
+// C++
+int binarySearch(int arr[], int n, int target) {
+    int left = 0, right = n - 1;               // Границы поиска: от начала до конца массива
+    while (left <= right) {                    // Пока границы не пересеклись
+        int mid = left + (right - left) / 2;   // Находим середину (без переполнения)
+        if (arr[mid] == target) return mid;    // Если нашли элемент - возвращаем индекс
+        if (arr[mid] < target) left = mid + 1; // Если искомый больше - ищем в правой половине
+        else right = mid - 1;                  // Если искомый меньше - ищем в левой половине
+    }
+    return -1;                                 // Элемент не найден
+}
+
+// JavaScript
+function binarySearch(arr, target) {
+    let left = 0, right = arr.length - 1;      // Границы поиска
+    while (left <= right) {                    // Пока границы не пересеклись
+        const mid = Math.floor((left + right) / 2); // Находим середину
+        if (arr[mid] === target) return mid;   // Если нашли элемент
+        if (arr[mid] < target) left = mid + 1; // Ищем в правой половине
+        else right = mid - 1;                  // Ищем в левой половине
+    }
+    return -1;                                 // Элемент не найден
+}
+
+
+10-ИНТЕРПОЛИРУЮЩИЙ ПОИСК
+// C++
+int interpolationSearch(int arr[], int n, int target) {
+    int low = 0, high = n - 1;                 // Границы поиска
+    
+    while (low <= high && target >= arr[low] && target <= arr[high]) { // Пока в границах и целевое значение в диапазоне
+        if (low == high) {                     // Если остался один элемент
+            if (arr[low] == target) return low; // Если он равен целевому - возвращаем
+            return -1;                         // Иначе - не найден
+        }
+        
+        // Вычисляем позицию с помощью интерполяционной формулы
+        int pos = low + ((target - arr[low]) * (high - low)) / (arr[high] - arr[low]);
+        
+        if (arr[pos] == target) return pos;    // Если нашли элемент
+        if (arr[pos] < target) low = pos + 1;  // Ищем в правой части
+        else high = pos - 1;                   // Ищем в левой части
+    }
+    return -1;                                 // Элемент не найден
+}
+
+
+// JavaScript
+function interpolationSearch(arr, target) {
+    let low = 0, high = arr.length - 1;        // Границы поиска
+    
+    while (low <= high && target >= arr[low] && target <= arr[high]) { // Пока в пределах и целевое в диапазоне
+        if (low === high) {                    // Если остался один элемент
+            if (arr[low] === target) return low; // Проверяем его
+            return -1;                         // Не нашли
+        }
+        
+        // Интерполяционная формула для вычисления позиции
+        const pos = low + Math.floor(((target - arr[low]) * (high - low)) / (arr[high] - arr[low]));
+        
+        if (arr[pos] === target) return pos;   // Если нашли элемент
+        if (arr[pos] < target) low = pos + 1;  // Ищем справа
+        else high = pos - 1;                   // Ищем слева
+    }
+    return -1;                                 // Элемент не найден
+}
+
+
+11-ПОИСК ФИБОНАЧИ
+
+// C++
+int fibonacciSearch(int arr[], int n, int target) {
+    int fib2 = 0;                              // (m-2)-ое число Фибоначчи
+    int fib1 = 1;                              // (m-1)-ое число Фибоначчи
+    int fibM = fib2 + fib1;                    // m-ое число Фибоначчи
+    
+    while (fibM < n) {                         // Находим наименьшее число Фибоначчи >= n
+        fib2 = fib1;                           // Обновляем (m-2)-ое число
+        fib1 = fibM;                           // Обновляем (m-1)-ое число
+        fibM = fib2 + fib1;                    // Вычисляем следующее число Фибоначчи
+    }
+    
+    int offset = -1;                           // Смещение от начала массива
+    
+    while (fibM > 1) {                         // Пока есть элементы для проверки
+        int i = min(offset + fib2, n-1);       // Проверяем элемент по индексу fib2
+        
+        if (arr[i] < target) {                 // Если target больше, ищем в правой части
+            fibM = fib1;                       // Обновляем числа Фибоначчи
+            fib1 = fib2;
+            fib2 = fibM - fib1;
+            offset = i;                        // Обновляем смещение
+        }
+        else if (arr[i] > target) {            // Если target меньше, ищем в левой части
+            fibM = fib2;                       // Обновляем числа Фибоначчи
+            fib1 = fib1 - fib2;
+            fib2 = fibM - fib1;
+        }
+        else return i;                         // Нашли элемент
+    }
+    
+    if (fib1 && arr[offset+1] == target)       // Проверяем последний элемент
+        return offset+1;
+        
+    return -1;                                 // Элемент не найден
+}
+
+
+// JavaScript
+function fibonacciSearch(arr, target) {
+    let fib2 = 0;                              // (m-2)-ое число Фибоначчи
+    let fib1 = 1;                              // (m-1)-ое число Фибоначчи
+    let fibM = fib2 + fib1;                    // m-ое число Фибоначчи
+    
+    while (fibM < arr.length) {                // Находим число Фибоначчи >= длины массива
+        fib2 = fib1;                           // Обновляем числа
+        fib1 = fibM;
+        fibM = fib2 + fib1;
+    }
+    
+    let offset = -1;                           // Смещение от начала
+    
+    while (fibM > 1) {                         // Пока есть элементы для проверки
+        const i = Math.min(offset + fib2, arr.length - 1); // Вычисляем индекс для проверки
+        
+        if (arr[i] < target) {                 // Если target больше
+            fibM = fib1;                       // Обновляем числа Фибоначчи
+            fib1 = fib2;
+            fib2 = fibM - fib1;
+            offset = i;                        // Обновляем смещение
+        }
+        else if (arr[i] > target) {            // Если target меньше
+            fibM = fib2;                       // Обновляем числа Фибоначчи
+            fib1 = fib1 - fib2;
+            fib2 = fibM - fib1;
+        }
+        else return i;                         // Нашли элемент
+    }
+    
+    if (fib1 && arr[offset + 1] === target)    // Проверяем последний возможный элемент
+        return offset + 1;
+        
+    return -1;                                 // Элемент не найден
+}
