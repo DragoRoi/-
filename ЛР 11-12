@@ -1,0 +1,192 @@
+Вариант 1. Напишите рекурсивную функцию для вычисления суммы цифр числа.
+def sum_of_digits(n):
+    n = abs(n)
+    
+    if n < 10:
+        return n
+    
+    return n % 10 + sum_of_digits(n // 10)
+
+# Проверка работы функции
+print(sum_of_digits(123))    # 6
+
+
+Вариант 6. Создайте рекурсивную функцию для подсчета количества гласных букв в строке.
+def count_vowels(s, depth=0):
+    indent = "  " * depth
+    if len(s) == 0:
+        print(f"{indent}Пустая строка, возвращаем 0")
+        return 0
+    first_char = s[0].lower()
+    remaining = s[1:]
+    print(f"{indent}Строка: '{s}', первый символ: '{s[0]}'")
+    if first_char in 'aeiouаеёиоуыэюя':
+        result = 1 + count_vowels(remaining, depth + 1)
+        print(f"{indent}'{s[0]}' - гласная, результат: 1 + ... = {result}")
+        return result
+    else:
+        result = count_vowels(remaining, depth + 1)
+        print(f"{indent}'{s[0]}' - не гласная, результат: {result}")
+        return result
+# Пример с отладкой
+print("Подсчет гласных в 'Hello':")
+count_vowels("Hello")
+
+Вариант 8. Реализуйте рекурсивную функцию для подсчета суммы элементов массива.
+
+def sum_array(arr):
+    """ Рекурсивно вычисляет сумму элементов массива"""
+    # Базовый случай: пустой массив
+    if len(arr) == 0:
+        return 0
+    # Базовый случай: массив из одного элемента
+    if len(arr) == 1:
+        return arr[0]
+    # Рекурсивный случай: первый элемент + сумма оставшегося массива
+    return arr[0] + sum_array(arr[1:])
+# Проверка работы функции
+test_arrays = [
+    [1, 2, 3, 4, 5],
+    [10, 20, 30],
+    [-1, 2, -3, 4],
+    [5],
+    []
+]
+for arr in test_arrays:
+    result = sum_array(arr)
+    print(f"{arr} -> Сумма: {result}")
+
+Вариант 12. Создайте функцию для генерации всех сочетаний размера k из n элементов.
+
+def combinations(arr, k):
+    """Генерирует все сочетания размера k из элементов массива arr"""
+    result = []
+    def backtrack(start, current_comb):
+        # Если текущая комбинация достигла нужного размера
+        if len(current_comb) == k:
+            result.append(current_comb.copy())
+            return
+        # Рекурсивно добавляем элементы в комбинацию
+        for i in range(start, len(arr)):
+            current_comb.append(arr[i])
+            backtrack(i + 1, current_comb)
+            current_comb.pop()  # backtrack
+    backtrack(0, [])
+    return result
+# Проверка работы функции
+test_cases = [
+    ([1, 2, 3, 4], 2),
+    (['A', 'B', 'C'], 2),
+    ([1, 2, 3], 3),
+    ([1, 2, 3, 4, 5], 3)
+]
+for arr, k in test_cases:
+    comb = combinations(arr, k)
+    print(f"C({len(arr)}, {k}) = {len(comb)}")
+    print(f"Сочетания: {comb}")
+    print()
+
+Вариант 15. Напишите программу для генерации всех путей в лабиринте размером 5×5.
+
+def find_paths(maze):
+    """Находит все пути от старта (0,0) до финиша (4,4) в лабиринте 5x5"""
+    paths = []
+    def backtrack(x, y, path):
+        # Если вышли за границы или в стене
+        if x < 0 or x >= 5 or y < 0 or y >= 5 or maze[x][y] == 1:
+            return
+        # Добавляем текущую позицию в путь
+        path.append((x, y))
+        # Если достигли финиша
+        if x == 4 and y == 4:
+            paths.append(path.copy())
+            path.pop()
+            return
+        # Временно помечаем клетку как посещенную
+        maze[x][y] = 1
+        # Рекурсивно идем во всех направлениях
+        backtrack(x + 1, y, path)  # вниз
+        backtrack(x - 1, y, path)  # вверх
+        backtrack(x, y + 1, path)  # вправо
+        backtrack(x, y - 1, path)  # влево
+        # Backtrack: убираем отметку и удаляем из пути
+        maze[x][y] = 0
+        path.pop()
+    backtrack(0, 0, [])
+    return paths
+# Лабиринт 5x5 (0 - проход, 1 - стена)
+maze = [
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 0, 0, 0, 0]
+]
+# Находим все пути
+all_paths = find_paths(maze)
+print(f"Найдено путей: {len(all_paths)}")
+print("\nВсе пути от (0,0) до (4,4):")
+for i, path in enumerate(all_paths, 1):
+    print(f"Путь {i}: {path}")
+    print(f"Длина: {len(path)} шагов")
+    print()
+
+Вариант 16. Реализуйте три вида обхода бинарного дерева (preorder, inorder, postorder).
+
+class TreeNode:
+    def __init__(self, value=0, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+def preorder_traversal(root):
+    """Pre-order обход (корень -> левое -> правое)"""
+    result = []
+    def traverse(node):
+        if node is None:
+            return
+        result.append(node.value)  # корень
+        traverse(node.left)  # левое поддерево
+        traverse(node.right)  # правое поддерево
+    traverse(root)
+    return result
+def inorder_traversal(root):
+    """In-order обход (левое -> корень -> правое)"""
+    result = []
+    def traverse(node):
+        if node is None:
+            return
+        traverse(node.left)  # левое поддерево
+        result.append(node.value)  # корень
+        traverse(node.right)  # правое поддерево
+    traverse(root)
+    return result
+def postorder_traversal(root):
+    """Post-order обход (левое -> правое -> корень)"""
+    result = []
+    def traverse(node):
+        if node is None:
+            return
+        traverse(node.left)  # левое поддерево
+        traverse(node.right)  # правое поддерево
+        result.append(node.value)  # корень
+    traverse(root)
+    return result
+# Создаем тестовое дерево
+#       1
+#      / \
+#     2   3
+#    / \   \
+#   4   5   6
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+root.left.left = TreeNode(4)
+root.left.right = TreeNode(5)
+root.right.right = TreeNode(6)
+# Выполняем обходы
+print("Pre-order (корень -> левое -> правое):")
+print(preorder_traversal(root))
+print("\nIn-order (левое -> корень -> правое):")
+print(inorder_traversal(root))
+print("\nPost-order (левое -> правое -> корень):")
+print(postorder_traversal(root))
